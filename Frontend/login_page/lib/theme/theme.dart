@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
   primary: Color(0xFF416FDF),
-  onPrimary: Color(0xFFFFFFFFF),
+  onPrimary: Color.fromARGB(255, 244, 241, 241),
   secondary: Color(0xFF6EAEE7),
   onSecondary: Color(0xFFFFFFFF),
   error: Color(0xFFBA1A1A),
@@ -36,14 +36,14 @@ ThemeData lightMode = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ButtonStyle(
       backgroundColor:
-          MaterialStateProperty.all<Color>(Colors.blue), // Add color
+          WidgetStateProperty.all<Color>(Colors.blue), // Add color
       foregroundColor:
-          MaterialStateProperty.all<Color>(Colors.white), // text color
-      elevation: MaterialStateProperty.all<double>(5.0), // shadow
-      padding: MaterialStateProperty.all<EdgeInsets>(
+          WidgetStateProperty.all<Color>(Colors.white), // text color
+      elevation: WidgetStateProperty.all<double>(5.0), // shadow
+      padding: WidgetStateProperty.all<EdgeInsets>(
         const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16), // Adjust as needed
         ), // RoundedRectangleBorder

@@ -31,7 +31,7 @@ class WelcomeButton extends StatelessWidget {
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            color: textColor!,
+            color: textColor,
           ),
         ),
       ),
