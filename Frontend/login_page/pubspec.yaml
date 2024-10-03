@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   icons_plus: ^5.0.0
   font_awesome_flutter: ^10.7.0
+  http: ^0.13.3
 
 
 dev_dependencies:

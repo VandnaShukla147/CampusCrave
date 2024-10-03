@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/widgets/custom_scaffold.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // For encoding data
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
@@ -10,19 +12,65 @@ class SignupScreen extends StatefulWidget {
 final _formSignUpKey = GlobalKey<FormState>();
 
 class _SignupScreenState extends State<SignupScreen> {
+  String fullName = '';
+  String email = '';
+  String password = '';
+
+  // Function to send the registration data to the backend
+  void _register() async {
+    _formSignUpKey.currentState!.save();
+    // Backend URL (replace with your local server's IP/URL)
+    var url =
+        'http://10.0.2.2:3000/register'; // Ensure to include the correct endpoint
+
+    // Data to be sent
+    Map<String, dynamic> requestData = {
+      'fullName': fullName,
+      'email': email,
+      'password': password,
+    };
+
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(requestData),
+      );
+      Map<String, dynamic> resData = jsonDecode(response.body);
+      print(response.body);
+      print('Doneeee');
+      
+
+      if (response.statusCode == 200) {
+        // If the server responds with a success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Account created successfully!')),
+        );
+      } else {
+        // Handle server error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration failed.')),
+        );
+      }
+    } catch (e) {
+      // Handle network error
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Network error. Please try again later.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
           decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(30)),
             color: Color.fromRGBO(255, 195, 17, 1),
           ),
           child: Form(
@@ -38,8 +86,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                //Full name field
+                // Full Name field
                 TextFormField(
+                  onChanged: (value) {
+                    fullName = value;
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your full name';
@@ -55,14 +106,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                //Email field
+                // Email field
                 TextFormField(
+                  onChanged: (value) {
+                    email = value;
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
                     if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Please Enter valid Email address';
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
@@ -75,10 +129,13 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                //Password Field
+                // Password Field
                 TextFormField(
                   obscureText: true,
                   obscuringCharacter: '*',
+                  onChanged: (value) {
+                    password = value;
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a password';
@@ -96,59 +153,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                //Confrim password field
-                TextFormField(
-                  obscureText: true,
-                  obscuringCharacter: '*',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please confirm your password';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    label: const Text('Confirm Password'),
-                    hintText: 'Confirm Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 20),
-                //Register Button
+                // Register Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formSignUpKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Account created Successfully'),
-                          ),
-                        );
+                        // Trigger the registration process
+                        _register();
                       }
                     },
                     child: const Text('Register'),
                   ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
