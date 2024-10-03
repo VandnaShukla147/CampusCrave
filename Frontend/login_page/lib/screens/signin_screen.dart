@@ -3,6 +3,8 @@ import 'package:login_page/screens/signup_screen.dart';
 import 'package:login_page/theme/theme.dart';
 import 'package:login_page/widgets/custom_scaffold.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -11,9 +13,66 @@ class SigninScreen extends StatefulWidget {
   State<SigninScreen> createState() => _SignInScreenState();
 }
 
+
+
 class _SignInScreenState extends State<SigninScreen> {
   final _formSignInKey = GlobalKey<FormState>();
   bool rememberPassword = true;
+  var enteredEmail = "";
+  var enteredPass = "";
+
+  
+
+  void OnSignIn() async {
+    if (_formSignInKey.currentState!.validate()) {
+      _formSignInKey.currentState!.save();
+
+      final url = Uri.parse('https://auth-server-khx7.onrender.com/auth/login');
+      //final url = Uri.https('flutter-back1-default-rtdb.firebaseio.com', 'data.json');
+      try{
+        final response = await http.post(url,headers: <String,String> {
+        'Content-Type': 'application/json', // Set the content type
+        'Accept': 'application/json', 
+      },
+        body: json.encode(<String, String>{
+      'email': enteredEmail,
+      'password': enteredPass,
+    }),
+      );
+
+      final Map<String,dynamic> resData = json.decode(response.body);
+      print(response.body);
+      print('reached here withoiut error');
+      print(resData);
+      if (!context.mounted){
+        return;
+      }
+    //Navigator.of(context).pop();
+   }
+        // if (response.statusCode == 200) {
+        //   // Handle success
+        //   
+          
+          
+        // } else {
+        //   // Handle error
+          
+        //   throw Exception('Failed to create');
+      //   }
+
+      // }
+      catch (error){
+         ScaffoldMessenger.of(context).showSnackBar(
+           const  SnackBar(content: Text('process failed')),
+          );
+          print('An error occurred: $error');
+        
+      }      
+    }
+  }
+  
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +88,7 @@ class _SignInScreenState extends State<SigninScreen> {
           Expanded(
             flex: 7,
             child: Container(
-              padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0), 
+              padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -77,6 +136,9 @@ class _SignInScreenState extends State<SigninScreen> {
                             ),
                           ),
                         ),
+                        onSaved: (value) {
+                          enteredEmail = value!;
+                        },
                       ),
                       const SizedBox(height: 10),
                       TextFormField(
@@ -107,6 +169,9 @@ class _SignInScreenState extends State<SigninScreen> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
+                        onSaved: (value) {
+                          enteredPass = value!;
+                        },
                       ),
                       const SizedBox(
                         height: 10,
@@ -148,23 +213,7 @@ class _SignInScreenState extends State<SigninScreen> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            if (_formSignInKey.currentState!.validate() &&
-                                rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Processing Data'),
-                                ),
-                              );
-                            } else if (!rememberPassword) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Please agress to the processing of person'),
-                                ),
-                              );
-                            }
-                          },
+                          onPressed: OnSignIn,
                           child: const Text('Sign Up'),
                         ),
                       ),
