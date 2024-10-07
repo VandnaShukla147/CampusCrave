@@ -15,6 +15,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String fullName = '';
   String email = '';
   String password = '';
+  String studentId = ''; // New variable for student ID
 
   // Function to send the registration data to the backend
   void _register() async {
@@ -28,6 +29,7 @@ class _SignupScreenState extends State<SignupScreen> {
       'fullName': fullName,
       'email': email,
       'password': password,
+      'studentId': studentId, // Add student ID to the request data
     };
 
     try {
@@ -42,7 +44,6 @@ class _SignupScreenState extends State<SignupScreen> {
       Map<String, dynamic> resData = jsonDecode(response.body);
       print(response.body);
       print('Doneeee');
-      
 
       if (response.statusCode == 200) {
         // If the server responds with a success message
@@ -148,6 +149,30 @@ class _SignupScreenState extends State<SignupScreen> {
                   decoration: InputDecoration(
                     label: const Text('Password'),
                     hintText: 'Enter Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Student ID Field
+                TextFormField(
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    studentId = value;
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your student ID';
+                    }
+                    if (!RegExp(r'^\d+$').hasMatch(value)) {
+                      return 'Student ID must be numeric';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    label: const Text('Student ID'),
+                    hintText: 'Enter Student ID',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
