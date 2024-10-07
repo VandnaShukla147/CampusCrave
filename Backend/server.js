@@ -11,14 +11,13 @@ app.use(bodyParser.json());  // Parses incoming JSON request bodies
 
 // Route for handling registration
 app.post('/register', (req, res) => {
-    const { fullName, email, password } = req.body;
+    const { fullName, email, password, studentId } = req.body;
 
-    // Here you can implement logic to store this data in a database.
-    // For now, we'll just send a success response.
-    console.log(`Full Name: ${fullName}, Email: ${email}, Password: ${password}`);
+    // Log the incoming registration data
+    console.log(`Full Name: ${fullName}, Email: ${email}, Password: ${password}, Student ID: ${studentId}`);
 
     // Simulate account creation success
-    if (fullName && email && password) {
+    if (fullName && email && password && studentId) {
         res.status(200).json({ message: 'Account created successfully!' });
     } else {
         res.status(400).json({ message: 'Invalid input' });
