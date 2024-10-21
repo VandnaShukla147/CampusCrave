@@ -1,21 +1,15 @@
 import "package:flutter/material.dart";
-import 'package:login_page/screens/homepage.dart';
-import 'package:login_page/screens/carou.dart';
-
+import 'package:login_page/screens/signin_screen.dart';
+import 'package:login_page/screens/signup_screen.dart';
+import 'package:login_page/theme/theme.dart';
+import 'package:login_page/widgets/custom_scaffold.dart';
+import 'package:login_page/widgets/welcome_button.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
-  // void pressedSI() async{
-  //   final newItem = await Navigator.of(context).push(MaterialPageRoute(builder: (cxt) => const SigninScreen()));
-  // if(newItem==null) {
-  //   return;
-  // }
-  // }
-
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return CustomScaffold(
       child: Column(
         children: [
@@ -59,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
                     child: WelcomeButton(
                       buttonText: 'Sign In',
                       onTap: SigninScreen(),
-                      color: Colors.red,
+                      color: Color.fromARGB(255, 135, 240, 240),
                       textColor: Colors.white,
                     ),
                   ),
@@ -67,8 +61,7 @@ class WelcomeScreen extends StatelessWidget {
                     child: WelcomeButton(
                       buttonText: 'Sign Up',
                       onTap: const SignupScreen(),
-                      color: Colors.red,
-                      textColor: Colors.white,
+                      color: lightColorScheme.primary,
                     ),
                   ),
                 ],
@@ -78,8 +71,5 @@ class WelcomeScreen extends StatelessWidget {
         ],
       ),
     );
-=======
-    return const Homepage();
->>>>>>> c754e5b9a892de15b77d3538b9cb72988306b653
   }
 }
