@@ -5,6 +5,27 @@ import 'package:login_page/widgets/custom_scaffold.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: ['email'],
+);
+
+//Funtion to handle google sign in
+void _signInWithGoogle() async {
+  try {
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser != null) {
+      //Successful sign in
+      print('Google sign in successful');
+
+    } else {
+      print('Googkle sign in cancelled');
+    }
+  } catch (error) {
+    print('Error signign in with google: $error');
+  }
+}
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -107,7 +128,7 @@ class _SignInScreenState extends State<SigninScreen> {
                         style: TextStyle(
                           fontSize: 30.0,
                           fontWeight: FontWeight.w900,
-                          color: lightColorScheme.primary,
+                          color: const Color.fromARGB(255, 253, 162, 16),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -203,7 +224,8 @@ class _SignInScreenState extends State<SigninScreen> {
                               'Forgot Password',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
+                                color:const Color.fromARGB(255, 253, 162, 16),
+
                               ),
                             ),
                           ),
@@ -247,17 +269,21 @@ class _SignInScreenState extends State<SigninScreen> {
                         ],
                       ),
                       const SizedBox(height: 50),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Ensures the icon is centered in the column
-                          Icon(
-                            FontAwesomeIcons.google,
-                            size: 50, // Adjust the size accordingly
-                            color: Colors.red, // Customize color if needed
+                      SizedBox(
+                          child: Center(
+                            child: GestureDetector(
+                              onTap: () {
+                                //google sing logic when pressed
+                                _signInWithGoogle();
+                              },
+                              child: Image.asset(
+                                'assets/images/google_logo.png',
+                                height: 100,
+                                width: 100,
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
+                        ),
                       const SizedBox(
                         height: 10,
                       ),
@@ -282,7 +308,8 @@ class _SignInScreenState extends State<SigninScreen> {
                             child: const Text(
                               'Sign in',
                               style: TextStyle(
-                                color: Colors.lightBlue,
+                                 color: const Color.fromARGB(255, 253, 162, 16),
+
                               ),
                             ),
                           ),
